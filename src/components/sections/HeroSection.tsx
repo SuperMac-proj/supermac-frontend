@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Button, Section } from '../common';
+import { Section } from '../common';
 import { HERO_CONTENT, LINKS } from '../../utils/constants';
 import demoImage from '../../assets/images/demo.png';
 

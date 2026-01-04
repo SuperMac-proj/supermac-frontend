@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Button, Section } from "../common";
+import { Section } from "../common";
 import { FINAL_CTA, LINKS } from "../../utils/constants";
 
 export default function FinalCTASection() {
