@@ -1,100 +1,120 @@
-import { motion } from 'framer-motion';
-import { Section } from '../components/common';
-import { RELEASE_NOTES, CHANGE_TYPE_CONFIG } from '../utils/releaseNotes';
-import type { ReleaseChange } from '../types';
+import { motion } from "framer-motion";
+import { Section } from "../components/common";
+import { RELEASE_NOTES, CHANGE_TYPE_CONFIG } from "../utils/releaseNotes";
+import type { ReleaseChange, ReleaseNote } from "../types";
 
 export default function ReleaseNotesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white pt-24">
-      <Section containerClassName="max-w-[1440px]">
-        {/* Header */}
-        <div className="text-center mb-12 md:mb-16 px-4">
-          <motion.h1
-            className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Release Notes
-          </motion.h1>
-          <motion.p
-            className="text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            See what's new in SuperMac
-          </motion.p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white pt-24 pb-16">
+      <Section containerClassName="max-w-[1200px]">
+        {/* Timeline */}
+        <div className="relative px-4">
+          {/* Vertical line */}
+          <div className="hidden md:block absolute left-[200px] top-0 bottom-0 w-px bg-gradient-to-b from-primary-200 via-accent-200 to-transparent"></div>
 
-        {/* Release Notes List */}
-        <div className="max-w-5xl mx-auto space-y-8 md:space-y-12 px-4">
-          {RELEASE_NOTES.map((release, index) => (
-            <motion.div
-              key={release.version}
-              className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              {/* Version Header */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-6 border-b border-gray-200">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                    Version {release.version}
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-500">{formatDate(release.date)}</p>
-                </div>
-                {index === 0 && (
-                  <div className="mt-4 md:mt-0">
-                    <span className="inline-block bg-primary-100 text-primary-600 px-4 py-2 rounded-full text-sm font-semibold">
-                      Latest
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Changes */}
-              <div className="space-y-4">
-                {release.changes.map((change, changeIndex) => (
-                  <ChangeItem key={changeIndex} change={change} />
-                ))}
-              </div>
-            </motion.div>
-          ))}
+          <div className="space-y-12">
+            {RELEASE_NOTES.map((release, index) => (
+              <ReleaseItem
+                key={release.version}
+                release={release}
+                index={index}
+              />
+            ))}
+          </div>
         </div>
       </Section>
     </div>
   );
 }
 
-function ChangeItem({ change }: { change: ReleaseChange }) {
-  const config = CHANGE_TYPE_CONFIG[change.type];
+function ReleaseItem({
+  release,
+  index,
+}: {
+  release: ReleaseNote;
+  index: number;
+}) {
+  // Group changes by type
+  const groupedChanges = release.changes.reduce((acc, change) => {
+    if (!acc[change.type]) {
+      acc[change.type] = [];
+    }
+    acc[change.type].push(change);
+    return acc;
+  }, {} as Record<string, ReleaseChange[]>);
 
   return (
-    <div className="flex items-start gap-4">
-      <div
-        className={`flex-shrink-0 w-8 h-8 rounded-lg ${config.bgColor} border ${config.borderColor} flex items-center justify-center text-sm`}
-      >
-        {config.icon}
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <span className={`text-xs font-semibold ${config.color}`}>
-            {config.label}
-          </span>
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12 relative"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      {/* Date - Sticky on desktop */}
+      <div className="md:sticky md:top-24 md:self-start">
+        <time className="block text-sm font-semibold text-gray-500 mb-1">
+          {formatDate(release.date)}
+        </time>
+        <div className="flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900">
+            v{release.version}
+          </h2>
+          {index === 0 && (
+            <span className="inline-flex items-center bg-gradient-to-r from-primary-500 to-accent-500 text-white px-2 py-1 rounded-lg text-xs font-bold">
+              Latest
+            </span>
+          )}
         </div>
-        <p className="text-gray-600 leading-relaxed">{change.description}</p>
       </div>
-    </div>
+
+      {/* Timeline dot - Desktop only */}
+      <div className="hidden md:block absolute left-[194px] top-1 w-3 h-3 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full border-2 border-white shadow-lg"></div>
+
+      {/* Content */}
+      <div className="space-y-6">
+        {/* Grouped changes */}
+        {Object.entries(groupedChanges).map(([type, changes]) => {
+          const config =
+            CHANGE_TYPE_CONFIG[type as keyof typeof CHANGE_TYPE_CONFIG];
+
+          return (
+            <div
+              key={type}
+              className="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-6 shadow-md"
+            >
+              <h3
+                className={`text-lg font-bold ${config.color} mb-4 flex items-center gap-2`}
+              >
+                {/* <span className="text-xl">{config.icon}</span> */}
+                {config.label}
+                <span className="text-sm font-normal text-gray-400">
+                  ({changes.length})
+                </span>
+              </h3>
+              <ul className="space-y-3">
+                {changes.map((change, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-3 text-gray-700 leading-relaxed"
+                  >
+                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-gray-400 rounded-full mt-2"></span>
+                    <span>{change.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+    </motion.div>
   );
 }
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 }

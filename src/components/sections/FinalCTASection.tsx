@@ -17,7 +17,7 @@ export default function FinalCTASection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-snug py-2">
           {FINAL_CTA.title}
         </h2>
         <p className="text-xl sm:text-2xl md:text-3xl text-white/95 mb-10 sm:mb-12 leading-relaxed">

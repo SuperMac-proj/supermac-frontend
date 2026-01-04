@@ -1,6 +1,21 @@
 import { motion } from 'framer-motion';
-import { Section } from '../common';
+import { Card, Section } from '../common';
 import { HOW_IT_WORKS_STEPS } from '../../utils/constants';
+
+const StepIcons = [
+  // Step 1: Download
+  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  </svg>,
+  // Step 2: Clipboard
+  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+  </svg>,
+  // Step 3: Command/Shortcut
+  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+  </svg>,
+];
 
 export default function HowItWorksSection() {
   return (
@@ -16,41 +31,45 @@ export default function HowItWorksSection() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-6xl mx-auto px-4 relative z-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-4 relative z-10">
         {HOW_IT_WORKS_STEPS.map((step, index) => (
           <motion.div
             key={index}
-            className="text-center relative"
+            className="relative"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
+            transition={{ duration: 0.5, delay: index * 0.15 }}
           >
-            {/* Step Number */}
-            <div className="relative inline-block mb-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
-                <span className="text-3xl font-bold text-white">
-                  {step.step}
-                </span>
+            <Card className="text-center relative h-full">
+              {/* Step Number Badge */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-2xl font-bold text-white">
+                    {step.step}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            {/* Icon */}
-            <div className="text-5xl mb-4">{step.icon}</div>
+              {/* Icon */}
+              <div className="flex justify-center mb-4 mt-6 text-primary-500">
+                {StepIcons[index]}
+              </div>
 
-            {/* Content */}
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">
-              {step.title}
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              {step.description}
-            </p>
+              {/* Content */}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {step.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed text-sm">
+                {step.description}
+              </p>
+            </Card>
 
             {/* Connector Arrow (except last item) */}
             {index < HOW_IT_WORKS_STEPS.length - 1 && (
-              <div className="hidden md:block absolute top-10 left-full w-12 -ml-6">
+              <div className="hidden md:flex absolute top-1/2 -right-4 lg:-right-6 -translate-y-1/2 z-20 items-center justify-center">
                 <svg
-                  className="w-12 h-6 text-gray-300"
+                  className="w-8 h-8 text-primary-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -58,8 +77,8 @@ export default function HowItWorksSection() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    strokeWidth={2.5}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
                   />
                 </svg>
               </div>

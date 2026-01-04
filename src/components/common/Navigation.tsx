@@ -19,8 +19,10 @@ export default function Navigation() {
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-[1440px]">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center" onClick={closeMobileMenu}>
-            <span className="text-xl font-bold text-gray-900">✨ SuperMac</span>
+          <Link to="/" className="flex items-center group" onClick={closeMobileMenu}>
+            <span className="text-3xl font-black text-gray-900 hover:text-primary-600 transition-colors duration-300" style={{ fontFamily: 'Rounded Mplus 1c, -apple-system, BlinkMacSystemFont, system-ui, sans-serif', fontWeight: 900, letterSpacing: '-0.03em' }}>
+              SuperMac
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Section } from '../common';
 import { DETAILED_FEATURES } from '../../utils/constants';
+import demoImage from '../../assets/images/demo.png';
 
 export default function DetailedFeaturesSection() {
   return (
@@ -10,7 +11,7 @@ export default function DetailedFeaturesSection() {
       {DETAILED_FEATURES.map((feature, index) => (
         <motion.div
           key={index}
-          className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10 ${
+          className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start relative z-10 ${
             index !== DETAILED_FEATURES.length - 1 ? 'mb-16 md:mb-24 lg:mb-32' : ''
           }`}
           initial={{ opacity: 0, y: 40 }}
@@ -25,9 +26,11 @@ export default function DetailedFeaturesSection() {
             }`}
           >
             <div className="relative px-4 sm:px-0">
-              <div className="aspect-video bg-gray-100 rounded-lg sm:rounded-xl border border-gray-200 flex items-center justify-center">
-                <p className="text-gray-400 text-sm sm:text-base md:text-lg">Feature Screenshot</p>
-              </div>
+              <img
+                src={demoImage}
+                alt={feature.title}
+                className="w-full h-auto rounded-lg sm:rounded-xl border border-gray-200 shadow-lg"
+              />
             </div>
           </div>
 
@@ -40,7 +43,7 @@ export default function DetailedFeaturesSection() {
             <div className="inline-block bg-primary-100 text-primary-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
               {feature.badge}
             </div>
-            <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">
+            <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 leading-snug py-2">
               {feature.title}
             </h3>
             <ul className="space-y-4">

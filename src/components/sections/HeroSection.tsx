@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Button, Section } from '../common';
 import { HERO_CONTENT, LINKS } from '../../utils/constants';
+import demoImage from '../../assets/images/demo.png';
 
 export default function HeroSection() {
   return (
@@ -11,7 +12,7 @@ export default function HeroSection() {
 
       <div className="text-center px-4 relative z-10">
         <motion.h1
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-snug py-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -61,11 +62,13 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <div className="relative mx-auto max-w-6xl">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-8 md:p-12 border border-gray-200/50">
-              <div className="aspect-video bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl flex items-center justify-center border border-gray-200/50 shadow-inner">
-                <p className="text-gray-400 text-sm sm:text-base md:text-lg font-medium">App Screenshot Placeholder</p>
-              </div>
+          <div className="relative mx-auto max-w-4xl">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
+              <img
+                src={demoImage}
+                alt="SuperMac App Screenshot"
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </motion.div>
