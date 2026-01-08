@@ -4,6 +4,8 @@ import { Navigation } from "./components/common";
 import HomePage from "./pages/HomePage";
 // import FeaturesPage from './pages/FeaturesPage';
 import PricingPage from "./pages/PricingPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
 import ReleaseNotesPage from "./pages/ReleaseNotesPage";
 
 function ScrollToTop() {
@@ -27,6 +29,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/features" element={<FeaturesPage />} /> */}
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/release-notes" element={<ReleaseNotesPage />} />
         </Routes>
 

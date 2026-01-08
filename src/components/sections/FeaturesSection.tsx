@@ -1,25 +1,17 @@
 import { motion } from 'framer-motion';
+import { ClipboardList, Type, Command } from 'lucide-react';
 import { Card, Section } from '../common';
 import { FEATURES } from '../../utils/constants';
 
 const FeatureIcons = [
-  // Clipboard History
-  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-  </svg>,
-  // Text Snippets (Lightning)
-  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-  </svg>,
-  // Quick Access (Keyboard)
-  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-  </svg>,
+  <ClipboardList className="w-16 h-16" strokeWidth={1.5} />,
+  <Type className="w-16 h-16" strokeWidth={1.5} />,
+  <Command className="w-16 h-16" strokeWidth={1.5} />,
 ];
 
 export default function FeaturesSection() {
   return (
-    <Section id="features" className="bg-gradient-to-b from-white to-gray-50/50 relative overflow-hidden">
+    <Section id="features" className="bg-gradient-to-br from-blue-50/80 via-purple-50/80 to-pink-50/80 relative overflow-hidden">
       <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-to-l from-primary-100/20 to-transparent rounded-full blur-3xl"></div>
 
       <div className="text-center mb-12 md:mb-16 px-4 relative z-10">

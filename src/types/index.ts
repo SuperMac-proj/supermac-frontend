@@ -51,3 +51,16 @@ export interface PricingPlan {
   buttonText: string;
   buttonLink: string;
 }
+
+// Blog post type
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  readTime: string;
+  tags: string[];
+  coverImage?: string;
+}

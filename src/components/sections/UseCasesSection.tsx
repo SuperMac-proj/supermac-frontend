@@ -1,29 +1,18 @@
 import { motion } from 'framer-motion';
+import { Code2, Feather, Headphones, Palette } from 'lucide-react';
 import { Card, Section } from '../common';
 import { USE_CASES } from '../../utils/constants';
 
 const UseCaseIcons = [
-  // Developers (Code icon)
-  <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-  </svg>,
-  // Writers (Pen/Edit icon)
-  <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-  </svg>,
-  // Support Teams (Headset icon)
-  <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-  </svg>,
-  // Designers (Color Palette icon)
-  <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-  </svg>,
+  <Code2 className="w-14 h-14" strokeWidth={1.5} />,
+  <Feather className="w-14 h-14" strokeWidth={1.5} />,
+  <Headphones className="w-14 h-14" strokeWidth={1.5} />,
+  <Palette className="w-14 h-14" strokeWidth={1.5} />,
 ];
 
 export default function UseCasesSection() {
   return (
-    <Section className="bg-gradient-to-b from-white to-purple-50/30 relative overflow-hidden">
+    <Section className="bg-gradient-to-br from-white via-blue-50/20 to-purple-50/20 relative overflow-hidden">
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-purple-100/30 to-transparent rounded-full blur-3xl"></div>
 
       <div className="text-center mb-12 md:mb-16 px-4 relative z-10">

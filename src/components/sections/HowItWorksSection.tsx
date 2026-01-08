@@ -19,7 +19,7 @@ const StepIcons = [
 
 export default function HowItWorksSection() {
   return (
-    <Section className="bg-gradient-to-b from-gray-50/50 via-blue-50/30 to-white relative overflow-hidden">
+    <Section className="bg-white relative overflow-hidden">
       <div className="absolute top-0 left-1/3 w-96 h-96 bg-gradient-to-br from-blue-100/30 to-transparent rounded-full blur-3xl"></div>
 
       <div className="text-center mb-12 md:mb-16 px-4 relative z-10">
