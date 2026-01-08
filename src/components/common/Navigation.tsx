@@ -38,9 +38,9 @@ export default function Navigation() {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   // Check authentication status
@@ -69,25 +69,43 @@ export default function Navigation() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (isUserMenuOpen && !target.closest('.user-menu-container')) {
+      if (isUserMenuOpen && !target.closest(".user-menu-container")) {
         setIsUserMenuOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isUserMenuOpen]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200/50 z-50 shadow-sm transition-transform duration-300 ${
-      isVisible ? 'translate-y-0' : '-translate-y-full'
-    }`}>
+    <nav
+      className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200/50 z-50 shadow-sm transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-[1440px]">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center group" onClick={closeMobileMenu}>
-            <img src={logoImage} alt="SuperMac Logo" className="w-12 h-12 self-center -mr-1" style={{ filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))' }} />
-            <span className="text-2xl font-medium text-gray-900 leading-none" style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif', letterSpacing: '-0.02em' }}>
+          <Link
+            to="/"
+            className="flex items-center group"
+            onClick={closeMobileMenu}
+          >
+            <img
+              src={logoImage}
+              alt="SuperMac Logo"
+              className="w-12 h-12 self-center -mr-1"
+              style={{ filter: "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))" }}
+            />
+            <span
+              className="text-2xl font-medium text-gray-900 leading-none"
+              style={{
+                fontFamily:
+                  "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+                letterSpacing: "-0.02em",
+              }}
+            >
               SuperMac
             </span>
           </Link>
@@ -124,14 +142,23 @@ export default function Navigation() {
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
                   >
-                    <span>{user.email}</span>
+                    <span>
+                      {user.user_metadata?.full_name || user.email}
+                    </span>
                     <svg
-                      className={`w-4 h-4 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`}
+                      className={`w-4 h-4 transition-transform ${
+                        isUserMenuOpen ? "rotate-180" : ""
+                      }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
 
@@ -233,7 +260,7 @@ export default function Navigation() {
               {user ? (
                 <>
                   <div className="px-5 py-2 text-center text-sm text-gray-600">
-                    {user.email}
+                    {user.user_metadata?.full_name || user.email}
                   </div>
                   <button
                     onClick={() => {
@@ -269,7 +296,10 @@ export default function Navigation() {
       </div>
 
       {/* Login Modal */}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
     </nav>
   );
 }
