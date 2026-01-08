@@ -7,6 +7,7 @@ import PricingPage from "./pages/PricingPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ReleaseNotesPage from "./pages/ReleaseNotesPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,6 +33,7 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/release-notes" element={<ReleaseNotesPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Routes>
 
         {/* Footer */}

@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,9 +9,26 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const handleOAuthLogin = (provider: string) => {
-    // TODO: Implement OAuth login logic
-    console.log('OAuth login with:', provider);
+  const handleOAuthLogin = async (provider: 'google' | 'apple' | 'github') => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        console.error('OAuth login error:', error.message);
+        alert(`Login failed: ${error.message}`);
+      } else {
+        // Close modal on successful OAuth redirect
+        onClose();
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('An unexpected error occurred');
+    }
   };
 
   const modalContent = (

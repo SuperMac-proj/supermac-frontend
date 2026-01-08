@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import type { User } from "@supabase/supabase-js";
 import logoImage from "../../assets/images/logo.png";
 import LoginModal from "./LoginModal";
+import { supabase } from "../../lib/supabase";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [user, setUser] = useState<User | null>(null);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -38,6 +42,41 @@ export default function Navigation() {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Check authentication status
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isUserMenuOpen && !target.closest('.user-menu-container')) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isUserMenuOpen]);
 
   return (
     <nav className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200/50 z-50 shadow-sm transition-transform duration-300 ${
@@ -79,12 +118,46 @@ export default function Navigation() {
 
             {/* CTA Buttons */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsLoginModalOpen(true)}
-                className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
-              >
-                Sign In
-              </button>
+              {user ? (
+                <div className="relative user-menu-container">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                  >
+                    <span>{user.email}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
+                      <button
+                        onClick={() => {
+                          handleSignOut();
+                          setIsUserMenuOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                >
+                  Sign In
+                </button>
+              )}
               <a
                 href="#"
                 className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
@@ -157,15 +230,32 @@ export default function Navigation() {
               Release Notes
             </Link>
             <div className="pt-4 border-t border-gray-200 space-y-3">
-              <button
-                onClick={() => {
-                  closeMobileMenu();
-                  setIsLoginModalOpen(true);
-                }}
-                className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
-              >
-                Sign In
-              </button>
+              {user ? (
+                <>
+                  <div className="px-5 py-2 text-center text-sm text-gray-600">
+                    {user.email}
+                  </div>
+                  <button
+                    onClick={() => {
+                      closeMobileMenu();
+                      handleSignOut();
+                    }}
+                    className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    setIsLoginModalOpen(true);
+                  }}
+                  className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                >
+                  Sign In
+                </button>
+              )}
               <a
                 href="#"
                 className="block w-full px-5 py-3 text-center text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md"
