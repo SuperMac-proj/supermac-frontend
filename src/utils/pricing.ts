@@ -15,7 +15,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     ],
     highlighted: false,
     buttonText: 'Start Free Trial',
-    buttonLink: 'https://github.com/yourusername/supermac/releases',
+    buttonLink: 'paddle:trial', // Special link to trigger Paddle checkout
   },
   {
     name: 'Pro Monthly',
@@ -33,7 +33,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     ],
     highlighted: true,
     buttonText: 'Get Monthly',
-    buttonLink: 'https://github.com/yourusername/supermac/releases',
+    buttonLink: 'paddle:monthly', // Special link to trigger Paddle checkout
   },
   {
     name: 'Pro Yearly',
@@ -50,7 +50,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     ],
     highlighted: false,
     buttonText: 'Get Yearly',
-    buttonLink: 'https://github.com/yourusername/supermac/releases',
+    buttonLink: 'paddle:yearly', // Special link to trigger Paddle checkout
   },
 ];
 

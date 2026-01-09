@@ -1,24 +1,41 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { User, CreditCard, Settings, LogOut, Trash2 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { Section } from '../components/common';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import {
+  User,
+  CreditCard,
+  Settings,
+  LogOut,
+  Trash2,
+  Calendar,
+  DollarSign,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
+import { supabase } from "../lib/supabase";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { Section } from "../components/common";
+import { getSubscription, cancelSubscription } from "../services/subscription";
+import {
+  openPaddleCheckout,
+  getSubscriptionStatusText,
+  PADDLE_PRICE_IDS,
+} from "../lib/paddle";
+import type { SubscriptionState } from "../types/paddle";
 
-type TabType = 'account' | 'billing' | 'settings';
+type TabType = "account" | "billing" | "settings";
 
 export default function MyPage() {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>('account');
+  const [activeTab, setActiveTab] = useState<TabType>("account");
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is authenticated
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        navigate('/');
+        navigate("/");
         return;
       }
       setUser(session.user);
@@ -30,7 +47,7 @@ export default function MyPage() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
-        navigate('/');
+        navigate("/");
       } else {
         setUser(session.user);
       }
@@ -41,13 +58,13 @@ export default function MyPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    navigate('/');
+    navigate("/");
   };
 
   const tabs = [
-    { id: 'account' as TabType, label: 'Account', icon: User },
-    { id: 'billing' as TabType, label: 'Billing', icon: CreditCard },
-    { id: 'settings' as TabType, label: 'Settings', icon: Settings },
+    { id: "account" as TabType, label: "Account", icon: User },
+    { id: "billing" as TabType, label: "Billing", icon: CreditCard },
+    { id: "settings" as TabType, label: "Settings", icon: Settings },
   ];
 
   if (loading) {
@@ -79,7 +96,9 @@ export default function MyPage() {
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-2 py-2 leading-tight">
               My Account
             </h1>
-            <p className="text-gray-600">Manage your account and subscription</p>
+            <p className="text-gray-600">
+              Manage your account and subscription
+            </p>
           </motion.div>
 
           {/* Mobile Tabs */}
@@ -93,8 +112,8 @@ export default function MyPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-2 px-4 py-3 rounded-lg whitespace-nowrap transition-all ${
                       activeTab === tab.id
-                        ? 'bg-primary-600 text-white shadow-md'
-                        : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
+                        ? "bg-primary-600 text-white shadow-md"
+                        : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -124,8 +143,8 @@ export default function MyPage() {
                         onClick={() => setActiveTab(tab.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                           activeTab === tab.id
-                            ? 'bg-primary-600 text-white shadow-md'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? "bg-primary-600 text-white shadow-md"
+                            : "text-gray-700 hover:bg-gray-50"
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -139,9 +158,11 @@ export default function MyPage() {
 
             {/* Content Area */}
             <div className="flex-1">
-              {activeTab === 'account' && <AccountTab user={user} />}
-              {activeTab === 'billing' && <BillingTab navigate={navigate} />}
-              {activeTab === 'settings' && <SettingsTab handleSignOut={handleSignOut} />}
+              {activeTab === "account" && <AccountTab user={user} />}
+              {activeTab === "billing" && <BillingTab navigate={navigate} />}
+              {activeTab === "settings" && (
+                <SettingsTab handleSignOut={handleSignOut} />
+              )}
             </div>
           </div>
         </div>
@@ -159,36 +180,46 @@ function AccountTab({ user }: { user: SupabaseUser }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Account Information</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        Account Information
+      </h2>
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-gray-100">
-          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">Name</span>
+          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">
+            Name
+          </span>
           <span className="text-gray-900 text-lg">
-            {user.user_metadata?.full_name || 'Not set'}
+            {user.user_metadata?.full_name || "Not set"}
           </span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-gray-100">
-          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">Email</span>
+          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">
+            Email
+          </span>
           <span className="text-gray-900 text-lg">{user.email}</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center py-4 border-b border-gray-100">
-          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">Member Since</span>
+          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">
+            Member Since
+          </span>
           <span className="text-gray-900 text-lg">
-            {new Date(user.created_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
+            {new Date(user.created_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
           </span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center py-4">
-          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">Provider</span>
+          <span className="text-gray-600 font-medium w-40 mb-1 sm:mb-0">
+            Provider
+          </span>
           <span className="text-gray-900 text-lg capitalize">
-            {user.app_metadata?.provider || 'Unknown'}
+            {user.app_metadata?.provider || "Unknown"}
           </span>
         </div>
       </div>
@@ -198,37 +229,320 @@ function AccountTab({ user }: { user: SupabaseUser }) {
 
 // Billing Tab Component
 function BillingTab({ navigate }: { navigate: (path: string) => void }) {
-  return (
-    <motion.div
-      className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 shadow-xl"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Billing & Subscription</h2>
+  const [subscriptionState, setSubscriptionState] = useState<SubscriptionState>(
+    {
+      subscription: null,
+      customer: null,
+      loading: true,
+      error: null,
+    }
+  );
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
 
-      <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-6">
-          <CreditCard className="w-10 h-10 text-gray-400" />
+  useEffect(() => {
+    loadSubscription();
+  }, []);
+
+  const loadSubscription = async () => {
+    try {
+      setSubscriptionState((prev) => ({ ...prev, loading: true, error: null }));
+      const data = await getSubscription();
+      setSubscriptionState({
+        subscription: data.subscription,
+        customer: data.customer,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error("Error loading subscription:", error);
+      setSubscriptionState({
+        subscription: null,
+        customer: null,
+        loading: false,
+        error: "Failed to load subscription information",
+      });
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!subscriptionState.subscription) return;
+
+    setIsCanceling(true);
+    try {
+      await cancelSubscription(subscriptionState.subscription.id);
+      await loadSubscription();
+      setShowCancelModal(false);
+    } catch (error) {
+      console.error("Error canceling subscription:", error);
+      alert(
+        "Failed to cancel subscription. Please try again or contact support."
+      );
+    } finally {
+      setIsCanceling(false);
+    }
+  };
+
+  const handleStartSubscription = async (priceId: string) => {
+    try {
+      await openPaddleCheckout({
+        items: [{ priceId, quantity: 1 }],
+      });
+    } catch (error) {
+      console.error("Error opening checkout:", error);
+      alert("Failed to open checkout. Please try again.");
+    }
+  };
+
+  if (subscriptionState.loading) {
+    return (
+      <motion.div
+        className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 shadow-xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent mb-4"></div>
+          <p className="text-gray-600">Loading subscription information...</p>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Subscription</h3>
-        <p className="text-gray-600 mb-6 max-w-md mx-auto">
-          You don't have an active subscription yet. Choose a plan that works best for you.
-        </p>
+      </motion.div>
+    );
+  }
+
+  return (
+    <>
+      <motion.div
+        className="bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 shadow-xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Billing & Subscription
+        </h2>
+
+        {subscriptionState.error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm">{subscriptionState.error}</p>
+          </div>
+        )}
+
+        {subscriptionState.subscription ? (
+          <SubscriptionInfo
+            subscription={subscriptionState.subscription}
+            onCancel={() => setShowCancelModal(true)}
+          />
+        ) : (
+          <NoSubscription
+            navigate={navigate}
+            onStartTrial={() => handleStartSubscription(PADDLE_PRICE_IDS.TRIAL)}
+          />
+        )}
+
+        {/* Payment History Section */}
+        <div className="mt-8 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Payment History
+          </h3>
+          <p className="text-gray-500 text-sm">
+            {subscriptionState.subscription
+              ? "Payment history will be available here soon."
+              : "No payment history available."}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Cancel Confirmation Modal */}
+      <AnimatePresence>
+        {showCancelModal && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !isCanceling && setShowCancelModal(false)}
+            />
+            <div className="fixed inset-0 z-[9999] overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center p-4">
+                <motion.div
+                  className="bg-white rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="bg-red-500 px-8 py-4">
+                    <h2 className="text-2xl font-bold text-white">
+                      Cancel Subscription
+                    </h2>
+                  </div>
+                  <div className="px-8 py-6">
+                    <p className="text-gray-700 mb-6">
+                      Are you sure you want to cancel your subscription? You'll
+                      continue to have access until the end of your billing
+                      period.
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setShowCancelModal(false)}
+                        disabled={isCanceling}
+                        className="flex-1 px-6 py-3 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all disabled:opacity-50"
+                      >
+                        Keep Subscription
+                      </button>
+                      <button
+                        onClick={handleCancelSubscription}
+                        disabled={isCanceling}
+                        className="flex-1 px-6 py-3 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all disabled:opacity-50"
+                      >
+                        {isCanceling ? "Canceling..." : "Cancel Subscription"}
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+// Subscription Info Component
+function SubscriptionInfo({
+  subscription,
+  onCancel,
+}: {
+  subscription: SubscriptionState["subscription"];
+  onCancel: () => void;
+}) {
+  if (!subscription) return null;
+
+  const isActive = subscription.status === "active";
+  const isTrialing = subscription.status === "trialing";
+  const isCanceled =
+    subscription.status === "canceled" || subscription.status === "deleted";
+
+  return (
+    <div className="space-y-6">
+      {/* Status Card */}
+      <div className="bg-gradient-to-r from-primary-50 to-accent-50 border border-primary-200 rounded-2xl p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              {isActive || isTrialing ? (
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+              ) : (
+                <XCircle className="w-5 h-5 text-red-600" />
+              )}
+              <h3 className="text-lg font-semibold text-gray-900">
+                {getSubscriptionStatusText(subscription.status)}
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              {isTrialing
+                ? "You are currently on a trial period"
+                : isCanceled
+                ? "Your subscription has been canceled"
+                : "Your subscription is active"}
+            </p>
+          </div>
+        </div>
+
+        {/* Subscription Details */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          {subscription.current_billing_period && (
+            <div className="flex items-start gap-3">
+              <Calendar className="w-5 h-5 text-primary-600 mt-0.5" />
+              <div>
+                <p className="text-xs text-gray-600 mb-1">Current Period</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {new Date(
+                    subscription.current_billing_period.ends_at
+                  ).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          )}
+          {subscription.next_billed_at && (
+            <div className="flex items-start gap-3">
+              <DollarSign className="w-5 h-5 text-primary-600 mt-0.5" />
+              <div>
+                <p className="text-xs text-gray-600 mb-1">Next Billing Date</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {new Date(subscription.next_billed_at).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {subscription.trial_dates && isTrialing && (
+          <div className="mt-4 p-3 bg-white/50 rounded-lg">
+            <p className="text-sm text-gray-700">
+              <span className="font-semibold">Trial ends:</span>{" "}
+              {new Date(subscription.trial_dates.ends_at).toLocaleDateString()}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Action Buttons */}
+      {!isCanceled && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={onCancel}
+            className="px-6 py-3 text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-all"
+          >
+            Cancel Subscription
+          </button>
+          <button className="px-6 py-3 text-sm font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded-lg transition-all">
+            Update Payment Method
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// No Subscription Component
+function NoSubscription({
+  navigate,
+  onStartTrial,
+}: {
+  navigate: (path: string) => void;
+  onStartTrial: () => void;
+}) {
+  return (
+    <div className="text-center py-12">
+      <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-6">
+        <CreditCard className="w-10 h-10 text-gray-400" />
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        No Active Subscription
+      </h3>
+      <p className="text-gray-600 mb-6 max-w-md mx-auto">
+        Start your 7-day free trial or choose a plan that works best for you.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <button
-          onClick={() => navigate('/pricing')}
+          onClick={onStartTrial}
           className="px-8 py-3 text-base font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
         >
-          View Pricing Plans
+          Start Free Trial
+        </button>
+        <button
+          onClick={() => navigate("/pricing")}
+          className="px-8 py-3 text-base font-semibold text-primary-600 bg-white border-2 border-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-300"
+        >
+          View All Plans
         </button>
       </div>
-
-      {/* Placeholder for future subscription info */}
-      <div className="mt-8 pt-8 border-t border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment History</h3>
-        <p className="text-gray-500 text-sm">No payment history available.</p>
-      </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -242,25 +556,29 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
     setIsDeleting(true);
 
     try {
-      // Note: Supabase requires server-side user deletion for security
-      // This is a client-side workaround - in production, you should:
-      // 1. Create a backend API endpoint or Edge Function
-      // 2. Call that endpoint from here
-      // 3. The backend should use admin privileges to delete the user
+      // Call Supabase Edge Function to delete user account
+      const { data, error } = await supabase.functions.invoke("delete-user");
+      if (error) {
+        throw error;
+      }
 
-      // For now, we'll sign out the user and show a message
-      // In a real implementation, you would call your backend API here:
-      // await fetch('/api/delete-account', { method: 'DELETE' });
+      // Log success response (includes trial_remaining_days if applicable)
+      console.log("Account deletion successful:", data);
 
+      // Sign out the user
       await supabase.auth.signOut();
 
-      // Show success message (you might want to add a toast notification here)
-      alert('Your account deletion request has been received. You have been signed out.');
+      // Show success message
+      alert(
+        "Your account has been successfully deleted. Thank you for using SuperMac."
+      );
 
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('Error deleting account:', error);
-      alert('An error occurred. Please try again or contact support.');
+      console.error("Error deleting account:", error);
+      alert(
+        "An error occurred while deleting your account. Please try again or contact support."
+      );
     } finally {
       setIsDeleting(false);
       setShowDeleteModal(false);
@@ -279,7 +597,9 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
 
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Account Actions</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              Account Actions
+            </h3>
             <div className="space-y-3">
               <button
                 onClick={handleSignOut}
@@ -288,7 +608,9 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
                 <LogOut className="w-5 h-5 text-gray-600" />
                 <div className="flex-1">
                   <div className="font-semibold text-gray-900">Sign Out</div>
-                  <div className="text-sm text-gray-500">Sign out of your account</div>
+                  <div className="text-sm text-gray-500">
+                    Sign out of your account
+                  </div>
                 </div>
               </button>
             </div>
@@ -296,7 +618,9 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
 
           {/* Danger Zone */}
           <div className="pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-red-600 mb-3">Danger Zone</h3>
+            <h3 className="text-lg font-semibold text-red-600 mb-3">
+              Danger Zone
+            </h3>
             <button
               onClick={() => setShowDeleteModal(true)}
               className="w-full flex items-center gap-3 px-6 py-4 text-left border-2 border-red-200 rounded-xl hover:bg-red-50 hover:border-red-300 transition-all group"
@@ -304,15 +628,21 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
               <Trash2 className="w-5 h-5 text-red-600" />
               <div className="flex-1">
                 <div className="font-semibold text-red-600">Delete Account</div>
-                <div className="text-sm text-red-500">Permanently delete your account and all data</div>
+                <div className="text-sm text-red-500">
+                  Permanently delete your account and all data
+                </div>
               </div>
             </button>
           </div>
 
           {/* Placeholder for future settings */}
           <div className="pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Preferences</h3>
-            <p className="text-gray-500 text-sm">Additional settings will be available soon.</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              Preferences
+            </h3>
+            <p className="text-gray-500 text-sm">
+              Additional settings will be available soon.
+            </p>
           </div>
         </div>
       </motion.div>
@@ -343,17 +673,22 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
                 >
                   {/* Header */}
                   <div className="bg-red-500 px-8 py-4">
-                    <h2 className="text-2xl font-bold text-white">Delete Account</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                      Delete Account
+                    </h2>
                   </div>
 
                   {/* Content */}
                   <div className="px-8 py-6">
                     <div className="mb-6">
                       <p className="text-gray-700 mb-4">
-                        Are you sure you want to delete your account? This action cannot be undone.
+                        Are you sure you want to delete your account? This
+                        action cannot be undone.
                       </p>
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                        <h4 className="font-semibold text-red-800 mb-2">This will permanently:</h4>
+                        <h4 className="font-semibold text-red-800 mb-2">
+                          This will permanently:
+                        </h4>
                         <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
                           <li>Delete your account and profile</li>
                           <li>Cancel any active subscriptions</li>
@@ -383,7 +718,7 @@ function SettingsTab({ handleSignOut }: { handleSignOut: () => void }) {
                             Deleting...
                           </>
                         ) : (
-                          'Delete Account'
+                          "Delete Account"
                         )}
                       </button>
                     </div>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button, Section } from '../components/common';
 import { PRICING_PLANS, FAQ_ITEMS } from '../utils/pricing';
 import type { PricingPlan } from '../types';
+import { openPaddleCheckout, PADDLE_PRICE_IDS } from '../lib/paddle';
 
 export default function PricingPage() {
   return (
@@ -43,6 +44,36 @@ export default function PricingPage() {
 }
 
 function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
+  const handleButtonClick = async () => {
+    // Check if this is a Paddle checkout link
+    if (plan.buttonLink.startsWith('paddle:')) {
+      const planType = plan.buttonLink.replace('paddle:', '');
+      const priceIdMap: Record<string, string> = {
+        trial: PADDLE_PRICE_IDS.TRIAL,
+        monthly: PADDLE_PRICE_IDS.MONTHLY,
+        yearly: PADDLE_PRICE_IDS.YEARLY,
+      };
+
+      const priceId = priceIdMap[planType];
+      if (priceId) {
+        try {
+          await openPaddleCheckout({
+            items: [{ priceId, quantity: 1 }],
+          });
+        } catch (error) {
+          console.error('Error opening checkout:', error);
+          alert('Failed to open checkout. Please try again or contact support.');
+        }
+      } else {
+        console.error('Invalid Paddle price ID configuration');
+        alert('Checkout is not configured yet. Please contact support.');
+      }
+    } else {
+      // External link - open in new tab
+      window.open(plan.buttonLink, '_blank');
+    }
+  };
+
   return (
     <motion.div
       className={`relative bg-white/90 backdrop-blur-sm rounded-3xl p-8 ${
@@ -106,7 +137,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
       <Button
         variant={plan.highlighted ? 'primary' : 'secondary'}
         className="w-full"
-        onClick={() => window.open(plan.buttonLink, '_blank')}
+        onClick={handleButtonClick}
       >
         {plan.buttonText}
       </Button>
