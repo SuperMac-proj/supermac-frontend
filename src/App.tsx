@@ -8,6 +8,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ReleaseNotesPage from "./pages/ReleaseNotesPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
+import MyPage from "./pages/MyPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -34,13 +35,39 @@ function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/release-notes" element={<ReleaseNotesPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/my-page" element={<MyPage />} />
         </Routes>
 
         {/* Footer */}
         <footer className="bg-gradient-to-b from-gray-50 to-gray-100/50 border-t border-gray-200/50 py-12">
           <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-[1440px]">
-            <div className="text-center text-gray-600">
-              <p>&copy; 2026 SuperMac. All rights reserved.</p>
+            <div className="flex flex-col items-center gap-4">
+              {/* Links */}
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
+                <a
+                  href="/privacy-policy"
+                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                >
+                  Privacy Policy
+                </a>
+                <span className="text-gray-300">•</span>
+                <a
+                  href="/terms-of-service"
+                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                >
+                  Terms of Service
+                </a>
+                <span className="text-gray-300">•</span>
+                <a
+                  href="mailto:support@supermac.com"
+                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                >
+                  Contact
+                </a>
+              </div>
+
+              {/* Copyright */}
+              <p className="text-gray-600 text-sm">&copy; 2026 SuperMac. All rights reserved.</p>
             </div>
           </div>
         </footer>

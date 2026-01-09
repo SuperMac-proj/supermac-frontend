@@ -106,7 +106,24 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
                 {/* Privacy Notice */}
                 <p className="text-center text-sm text-gray-500 pt-4">
-                  By continuing, you agree to our Terms of Service and Privacy Policy
+                  By continuing, you agree to our{' '}
+                  <a
+                    href="/terms-of-service"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:text-primary-700 underline"
+                  >
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:text-primary-700 underline"
+                  >
+                    Privacy Policy
+                  </a>
                 </p>
               </div>
             </motion.div>
