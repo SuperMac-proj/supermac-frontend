@@ -2,9 +2,8 @@ import type { Feature, UseCase, HowItWorksStep } from "../types";
 
 // Hero section content
 export const HERO_CONTENT = {
-  title: "Supercharge Your Mac Experience",
-  subtitle:
-    "A productivity toolkit designed to make working on macOS faster, easier, and more efficient",
+  title: "Take control of macOS",
+  subtitle: "Boost productivity by up to 17%. Go home earlier.",
   primaryCTA: "Download for macOS",
   secondaryCTA: "View on GitHub",
 };

@@ -18,9 +18,12 @@ export default function BlogPage() {
     : BLOG_POSTS;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50/50 to-white pt-24 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black pt-24 pb-16 relative overflow-hidden">
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+
       <Section containerClassName="max-w-[1400px]">
-        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-12 relative z-10">
           {/* Sidebar */}
           <motion.aside
             className="lg:sticky lg:top-24 lg:self-start"
@@ -30,15 +33,15 @@ export default function BlogPage() {
           >
             {/* Title in sidebar */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Blog</h1>
-              <p className="text-sm text-gray-600">
+              <h1 className="text-2xl font-bold text-white mb-2">Blog</h1>
+              <p className="text-sm text-gray-400">
                 Tips, tutorials, and insights
               </p>
             </div>
 
             {/* Tags Filter */}
             <div className="space-y-4">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+              <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
                 Topics
               </h2>
               <div className="flex flex-wrap lg:flex-col gap-2">
@@ -47,8 +50,8 @@ export default function BlogPage() {
                   onClick={() => setSelectedTag(null)}
                   className={`text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     selectedTag === null
-                      ? "text-primary-600 bg-primary-50 font-semibold"
-                      : "text-gray-600 hover:text-primary-600 hover:bg-primary-50/50"
+                      ? "text-blue-400 bg-blue-600/20 font-semibold border border-blue-500/30"
+                      : "text-gray-400 hover:text-blue-400 hover:bg-blue-600/10"
                   }`}
                 >
                   All Posts
@@ -59,8 +62,8 @@ export default function BlogPage() {
                     onClick={() => setSelectedTag(tag)}
                     className={`text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                       selectedTag === tag
-                        ? "text-primary-600 bg-primary-50 font-semibold"
-                        : "text-gray-600 hover:text-primary-600 hover:bg-primary-50/50"
+                        ? "text-blue-400 bg-blue-600/20 font-semibold border border-blue-500/30"
+                        : "text-gray-400 hover:text-blue-400 hover:bg-blue-600/10"
                     }`}
                   >
                     {tag}
@@ -73,12 +76,12 @@ export default function BlogPage() {
           {/* Main Content */}
           <div>
             {/* Post count */}
-            <div className="mb-6 text-sm text-gray-600">
+            <div className="mb-6 text-sm text-gray-400">
               {selectedTag ? (
                 <span>
                   Showing {filteredPosts.length} post
                   {filteredPosts.length !== 1 ? "s" : ""} in{" "}
-                  <span className="font-semibold text-primary-600">
+                  <span className="font-semibold text-blue-400">
                     {selectedTag}
                   </span>
                 </span>
@@ -97,7 +100,7 @@ export default function BlogPage() {
             {/* No results */}
             {filteredPosts.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-gray-500">No posts found for this topic.</p>
+                <p className="text-gray-400">No posts found for this topic.</p>
               </div>
             )}
           </div>
@@ -121,14 +124,14 @@ function BlogPostCard({ post, index }: BlogPostCardProps) {
     >
       <Link
         to={`/blog/${post.slug}`}
-        className="block group h-full bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+        className="block group h-full bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl hover:border-gray-700 transition-all duration-300 hover:-translate-y-1"
       >
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
           {post.tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary-50 to-accent-50 text-primary-700 border border-primary-200/50"
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-600/20 text-blue-400 border border-blue-500/30"
             >
               {tag}
             </span>
@@ -136,12 +139,12 @@ function BlogPostCard({ post, index }: BlogPostCardProps) {
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+        <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
           {post.title}
         </h2>
 
         {/* Excerpt */}
-        <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+        <p className="text-gray-400 mb-4 line-clamp-3">{post.excerpt}</p>
 
         {/* Meta */}
         <div className="flex items-center gap-4 text-sm text-gray-500">
@@ -153,7 +156,7 @@ function BlogPostCard({ post, index }: BlogPostCardProps) {
         </div>
 
         {/* Read More Arrow */}
-        <div className="mt-6 flex items-center text-primary-600 font-semibold group-hover:gap-2 transition-all">
+        <div className="mt-6 flex items-center text-blue-400 font-semibold group-hover:gap-2 transition-all">
           <span>Read more</span>
           <svg
             className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"

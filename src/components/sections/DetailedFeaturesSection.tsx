@@ -1,56 +1,86 @@
-import { motion } from 'framer-motion';
-import { Section } from '../common';
-import { DETAILED_FEATURES } from '../../utils/constants';
-import demoImage from '../../assets/images/demo.png';
+import { motion } from "framer-motion";
+import { Section } from "../common";
+import { DETAILED_FEATURES } from "../../utils/constants";
+import demoImage from "../../assets/images/demo.png";
+import snippetVideo from "../../assets/snippet.mp4";
+import clipboardVideo from "../../assets/clipboard_white.mp4";
 
 export default function DetailedFeaturesSection() {
   return (
-    <Section className="bg-white relative overflow-hidden">
-      <div className="absolute top-1/3 left-0 w-96 h-96 bg-gradient-to-r from-accent-100/20 to-transparent rounded-full blur-3xl"></div>
+    <Section
+      id="detailed-features"
+      className="bg-gradient-to-b from-black via-gray-950 to-black relative overflow-hidden"
+    >
+      <div className="absolute top-1/3 left-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
 
       {DETAILED_FEATURES.map((feature, index) => (
         <motion.div
           key={index}
           className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start relative z-10 ${
-            index !== DETAILED_FEATURES.length - 1 ? 'mb-16 md:mb-24 lg:mb-32' : ''
+            index !== DETAILED_FEATURES.length - 1
+              ? "mb-16 md:mb-24 lg:mb-32"
+              : ""
           }`}
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          {/* Image */}
+          {/* Image/Video */}
           <div
             className={`${
-              feature.imagePosition === 'right' ? 'lg:order-2' : 'lg:order-1'
+              feature.imagePosition === "right" ? "lg:order-2" : "lg:order-1"
             }`}
           >
             <div className="relative px-4 sm:px-0">
-              <img
-                src={demoImage}
-                alt={feature.title}
-                className="w-full h-auto rounded-lg sm:rounded-xl border border-gray-200 shadow-lg"
-              />
+              {index === 0 ? (
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto rounded-lg sm:rounded-xl border border-gray-800 shadow-2xl"
+                >
+                  <source src={clipboardVideo} type="video/mp4" />
+                </video>
+              ) : index === 1 ? (
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto rounded-lg sm:rounded-xl border border-gray-800 shadow-2xl"
+                >
+                  <source src={snippetVideo} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  src={demoImage}
+                  alt={feature.title}
+                  className="w-full h-auto rounded-lg sm:rounded-xl border border-gray-800 shadow-2xl"
+                />
+              )}
             </div>
           </div>
 
           {/* Content */}
           <div
             className={`px-4 sm:px-0 ${
-              feature.imagePosition === 'right' ? 'lg:order-1' : 'lg:order-2'
+              feature.imagePosition === "right" ? "lg:order-1" : "lg:order-2"
             }`}
           >
-            <div className="inline-block bg-primary-100 text-primary-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <div className="inline-block bg-blue-600/20 text-blue-400 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-blue-500/30">
               {feature.badge}
             </div>
-            <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 leading-snug py-2">
+            <h3 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-snug py-2">
               {feature.title}
             </h3>
             <ul className="space-y-4">
               {feature.features.map((item, idx) => (
                 <li key={idx} className="flex items-start">
                   <svg
-                    className="w-6 h-6 text-primary-600 mr-3 flex-shrink-0 mt-0.5"
+                    className="w-6 h-6 text-blue-500 mr-3 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -62,7 +92,7 @@ export default function DetailedFeaturesSection() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span className="text-lg text-gray-600">{item}</span>
+                  <span className="text-lg text-gray-400">{item}</span>
                 </li>
               ))}
             </ul>

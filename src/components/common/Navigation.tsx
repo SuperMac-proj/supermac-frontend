@@ -80,7 +80,7 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200/50 z-50 shadow-sm transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-b border-white/10 z-50 shadow-2xl transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -96,10 +96,10 @@ export default function Navigation() {
               src={logoImage}
               alt="SuperMac Logo"
               className="w-12 h-12 self-center -mr-1"
-              style={{ filter: "drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))" }}
+              style={{ filter: "drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1))" }}
             />
             <span
-              className="text-2xl font-medium text-gray-900 leading-none"
+              className="text-2xl font-medium text-white leading-none"
               style={{
                 fontFamily:
                   "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
@@ -116,19 +116,19 @@ export default function Navigation() {
             <div className="flex items-center gap-8">
               <Link
                 to="/pricing"
-                className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                className="text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 Pricing
               </Link>
               <Link
                 to="/blog"
-                className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                className="text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 Blog
               </Link>
               <Link
                 to="/release-notes"
-                className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                className="text-sm font-medium text-white/90 hover:text-white transition-colors"
               >
                 Release Notes
               </Link>
@@ -140,7 +140,7 @@ export default function Navigation() {
                 <div className="relative user-menu-container">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white border border-white/20 rounded-lg hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all"
                   >
                     <span>{user.user_metadata?.full_name || user.email}</span>
                     <svg
@@ -162,21 +162,21 @@ export default function Navigation() {
 
                   {/* Dropdown Menu */}
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
+                    <div className="absolute right-0 mt-2 w-48 bg-black/90 backdrop-blur-xl rounded-lg shadow-2xl py-1 z-50 border border-white/20">
                       <Link
                         to="/my-page"
                         onClick={() => setIsUserMenuOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="block px-4 py-2 text-sm text-white/90 hover:bg-white/10 hover:text-white transition-colors"
                       >
                         My Page
                       </Link>
-                      <div className="border-t border-gray-100 my-1"></div>
+                      <div className="border-t border-white/10 my-1"></div>
                       <button
                         onClick={() => {
                           handleSignOut();
                           setIsUserMenuOpen(false);
                         }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="w-full text-left px-4 py-2 text-sm text-white/90 hover:bg-white/10 hover:text-white transition-colors"
                       >
                         Sign Out
                       </button>
@@ -186,7 +186,7 @@ export default function Navigation() {
               ) : (
                 <button
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                  className="px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white border border-white/20 rounded-lg hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all"
                 >
                   Sign In
                 </button>
@@ -202,7 +202,7 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="md:hidden p-2 text-white/90 hover:text-white transition-colors"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -240,38 +240,38 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4 space-y-3">
+          <div className="md:hidden border-t border-white/10 py-4 space-y-3">
             <Link
               to="/pricing"
-              className="block text-gray-700 hover:text-primary-600 transition-colors py-2 font-medium"
+              className="block text-white/90 hover:text-white transition-colors py-2 font-medium"
               onClick={closeMobileMenu}
             >
               Pricing
             </Link>
             <Link
               to="/blog"
-              className="block text-gray-700 hover:text-primary-600 transition-colors py-2 font-medium"
+              className="block text-white/90 hover:text-white transition-colors py-2 font-medium"
               onClick={closeMobileMenu}
             >
               Blog
             </Link>
             <Link
               to="/release-notes"
-              className="block text-gray-700 hover:text-primary-600 transition-colors py-2 font-medium"
+              className="block text-white/90 hover:text-white transition-colors py-2 font-medium"
               onClick={closeMobileMenu}
             >
               Release Notes
             </Link>
-            <div className="pt-4 border-t border-gray-200 space-y-3">
+            <div className="pt-4 border-t border-white/10 space-y-3">
               {user ? (
                 <>
-                  <div className="px-5 py-2 text-center text-sm text-gray-600">
+                  <div className="px-5 py-2 text-center text-sm text-white/70">
                     {user.user_metadata?.full_name || user.email}
                   </div>
                   <Link
                     to="/my-page"
                     onClick={closeMobileMenu}
-                    className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                    className="block w-full px-5 py-2.5 text-center text-sm font-medium text-white/90 hover:text-white border border-white/20 rounded-lg hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all"
                   >
                     My Page
                   </Link>
@@ -280,7 +280,7 @@ export default function Navigation() {
                       closeMobileMenu();
                       handleSignOut();
                     }}
-                    className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                    className="block w-full px-5 py-2.5 text-center text-sm font-medium text-white/90 hover:text-white border border-white/20 rounded-lg hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all"
                   >
                     Sign Out
                   </button>
@@ -291,7 +291,7 @@ export default function Navigation() {
                     closeMobileMenu();
                     setIsLoginModalOpen(true);
                   }}
-                  className="block w-full px-5 py-2.5 text-center text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg hover:border-gray-400 transition-all"
+                  className="block w-full px-5 py-2.5 text-center text-sm font-medium text-white/90 hover:text-white border border-white/20 rounded-lg hover:border-white/40 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all"
                 >
                   Sign In
                 </button>

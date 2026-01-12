@@ -1,73 +1,201 @@
-import { motion } from 'framer-motion';
-import { Section } from '../common';
-import { HERO_CONTENT, LINKS } from '../../utils/constants';
-import demoImage from '../../assets/images/demo.png';
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { HERO_CONTENT } from "../../utils/constants";
+import clipboardVideo from "../../assets/clipboard_white.mp4";
+import logo from "../../assets/images/logo.png";
 
 export default function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [splineLoaded, setSplineLoaded] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    // Spline이 완전히 렌더링되도록 추가 지연
+    const splineTimer = setTimeout(() => {
+      setSplineLoaded(true);
+    }, 400);
+
+    const video = videoRef.current;
+    if (!video) {
+      return () => clearTimeout(splineTimer);
+    }
+
+    const checkVideoVisibility = () => {
+      const rect = video.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // 비디오의 높이
+      const videoHeight = rect.height;
+
+      // 화면에 보이는 비디오의 높이 계산
+      const visibleTop = Math.max(0, rect.top);
+      const visibleBottom = Math.min(windowHeight, rect.bottom);
+      const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+      // 비디오의 100%가 보이는지 확인 (99.9%로 약간의 여유 허용)
+      const visibilityRatio = visibleHeight / videoHeight;
+
+      if (visibilityRatio >= 0.999 && video.paused) {
+        video.play();
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            checkVideoVisibility();
+          }
+        });
+      },
+      {
+        threshold: [0, 0.25, 0.5, 0.75, 1.0],
+      }
+    );
+
+    // 스크롤 이벤트에도 체크
+    window.addEventListener('scroll', checkVideoVisibility);
+    observer.observe(video);
+
+    return () => {
+      clearTimeout(splineTimer);
+      observer.disconnect();
+      window.removeEventListener('scroll', checkVideoVisibility);
+    };
+  }, []);
+
   return (
-    <Section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-white relative overflow-hidden">
-      {/* Gradient Orbs */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary-200/30 to-accent-200/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-accent-200/30 to-primary-200/30 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <section className="relative w-full min-h-screen bg-black pb-20">
+      {/* Spline 3D Background */}
+      <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 bg-black">
+        <iframe
+          src="https://my.spline.design/metallictorus-ewLEUPjEnG0TwOjnaBcN6krV/"
+          frameBorder="0"
+          width="100%"
+          height="100%"
+          className="w-full h-full transition-opacity duration-[2000ms] ease-in-out"
+          style={{ opacity: splineLoaded ? 1 : 0 }}
+        />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start px-4 relative z-10">
-        {/* Left: Text Content */}
-        <div className="lg:col-span-6">
-          <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-6 py-2"
-            style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: '1.2' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {HERO_CONTENT.title}
-          </motion.h1>
+      {/* Gradient Overlay */}
+      <div className="fixed inset-0 h-screen bg-gradient-to-b from-black/20 via-transparent via-40% to-black/80 pointer-events-none z-0" />
 
-          <motion.p
-            className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-10"
-            style={{ fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif', fontWeight: 400, letterSpacing: '0em', lineHeight: '1.65' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            {HERO_CONTENT.subtitle}
-          </motion.p>
+      {/* Bottom Fade to Next Section */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 sm:h-56 md:h-64 lg:h-80 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-0" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <button
-              onClick={() => window.open(LINKS.download, '_blank')}
-              className="group relative px-7 py-3.5 sm:px-8 sm:py-4 text-lg sm:text-xl font-bold text-white bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 hover:from-primary-600 hover:via-accent-600 hover:to-accent-700 rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              <span>{HERO_CONTENT.primaryCTA}</span>
-            </button>
-          </motion.div>
-        </div>
+      {/* Logo - Above Title */}
+      <motion.div
+        className="absolute top-12 sm:top-16 md:top-20 lg:top-24 left-0 right-0 flex justify-center z-10 pointer-events-none"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          rotateY: [-15, 15, -15]
+        }}
+        transition={{
+          opacity: { duration: 0.8, delay: 0.1 },
+          y: { duration: 0.8, delay: 0.1 },
+          rotateY: {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.9
+          }
+        }}
+        style={{ perspective: 1000 }}
+      >
+        <img
+          src={logo}
+          alt="SuperMac Logo"
+          className="w-[240px] h-[240px]"
+        />
+      </motion.div>
 
-        {/* Right: Demo Image */}
-        <motion.div
-          className="lg:col-span-6"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+      {/* Content Container */}
+      <div className="relative z-10 w-full flex flex-col items-center justify-start px-4 pt-40 sm:pt-48 md:pt-56 lg:pt-72 pointer-events-none">
+        {/* Main Heading */}
+        <motion.h1
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-center text-white mb-6 sm:mb-8 tracking-tight w-full px-4 sm:px-6"
+          style={{
+            fontFamily:
+              '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+            fontWeight: 600,
+            letterSpacing: "-0.03em",
+            lineHeight: "1.05",
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
         >
-          <div className="relative">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200/50 overflow-hidden">
-              <img
-                src={demoImage}
-                alt="SuperMac App Screenshot"
-                className="w-full h-auto"
-              />
-            </div>
+          {HERO_CONTENT.title}
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 sm:px-6"
+          style={{
+            fontFamily:
+              '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+            fontWeight: 400,
+            letterSpacing: "-0.01em",
+            lineHeight: "1.3",
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+        >
+          Boost productivity by up to 17%.
+          <br />
+          Go home earlier.
+        </motion.p>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+          className="flex justify-center pointer-events-auto"
+        >
+          <a
+            href="https://github.com/your-repo/releases/latest/download/supermac.dmg"
+            className="group relative px-5 py-2 sm:px-6 sm:py-2.5 text-base sm:text-lg font-bold
+                       text-white rounded-lg sm:rounded-xl
+                       bg-gradient-to-r from-blue-600 to-blue-700
+                       hover:from-blue-500 hover:to-blue-600
+                       transform hover:scale-105 transition-all duration-300
+                       border-2 border-blue-400/60"
+            style={{
+              fontFamily:
+                '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
+            }}
+          >
+            <span>Download for macOS</span>
+          </a>
+        </motion.div>
+
+        {/* Video Section */}
+        <motion.div
+          className="w-[95%] sm:w-[90%] md:w-[85%] max-w-3xl mt-12 sm:mt-16 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoLoaded ? 1 : 0 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
+        >
+          <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+            <video
+              ref={videoRef}
+              src={clipboardVideo}
+              loop
+              muted
+              playsInline
+              preload="auto"
+              onCanPlayThrough={() => setVideoLoaded(true)}
+              className="w-full h-auto transition-opacity duration-700"
+              style={{ opacity: videoLoaded ? 1 : 0 }}
+            />
           </div>
         </motion.div>
       </div>
-    </Section>
+    </section>
   );
 }

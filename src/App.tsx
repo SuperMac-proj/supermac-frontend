@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50/30">
+      <div className="min-h-screen bg-black w-full overflow-x-hidden m-0 p-0">
         <Navigation />
 
         <Routes>
@@ -39,35 +39,35 @@ function App() {
         </Routes>
 
         {/* Footer */}
-        <footer className="bg-gradient-to-b from-gray-50 to-gray-100/50 border-t border-gray-200/50 py-12">
+        <footer className="bg-black border-t border-white/10 py-12">
           <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-[1440px]">
             <div className="flex flex-col items-center gap-4">
               {/* Links */}
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
                 <a
                   href="/privacy-policy"
-                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                  className="text-white/70 hover:text-white transition-colors"
                 >
                   Privacy Policy
                 </a>
-                <span className="text-gray-300">•</span>
+                <span className="text-white/30">•</span>
                 <a
                   href="/terms-of-service"
-                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                  className="text-white/70 hover:text-white transition-colors"
                 >
                   Terms of Service
                 </a>
-                <span className="text-gray-300">•</span>
+                <span className="text-white/30">•</span>
                 <a
                   href="mailto:support@supermac.com"
-                  className="text-gray-600 hover:text-primary-600 transition-colors"
+                  className="text-white/70 hover:text-white transition-colors"
                 >
                   Contact
                 </a>
               </div>
 
               {/* Copyright */}
-              <p className="text-gray-600 text-sm">&copy; 2026 SuperMac. All rights reserved.</p>
+              <p className="text-white/60 text-sm">&copy; 2026 SuperMac. All rights reserved.</p>
             </div>
           </div>
         </footer>
