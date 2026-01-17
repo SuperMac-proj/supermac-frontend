@@ -6,42 +6,20 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Supabase SDK가 URL의 hash fragment(#access_token=...)를 자동으로 처리함
+    // getSession()으로 세션 확인 후 리다이렉트
     const handleAuthCallback = async () => {
-      try {
-        // Extract the authorization code from URL
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
+      const { data: { session }, error } = await supabase.auth.getSession();
 
-        if (!code) {
-          console.error('No authorization code found in URL');
-          navigate('/', { replace: true });
-          return;
-        }
-
-        // Exchange the code for a session
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        console.log('=== Exchange Result ===');
-        console.log('data:', data);
-        console.log('error:', error);
-
-        if (error) {
-          console.error('Auth error:', error);
-          navigate('/', { replace: true });
-          return;
-        }
-
-        if (data.session) {
-          console.log('User signed in:', data.session.user);
-          // Navigate and replace history to avoid keeping the callback URL
-          navigate('/', { replace: true });
-        } else {
-          // No session, redirect to home
-          navigate('/', { replace: true });
-        }
-      } catch (error) {
-        console.error('Unexpected error:', error);
-        navigate('/', { replace: true });
+      if (error) {
+        console.error('Auth error:', error);
       }
+
+      if (session) {
+        console.log('User signed in:', session.user);
+      }
+
+      navigate('/', { replace: true });
     };
 
     handleAuthCallback();
