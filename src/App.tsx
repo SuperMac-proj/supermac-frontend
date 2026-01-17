@@ -20,7 +20,8 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
 
     // Clean up hash from URL (from Supabase OAuth)
-    if (window.location.hash) {
+    // auth/callback 페이지에서는 hash를 유지해야 Supabase가 토큰을 처리할 수 있음
+    if (window.location.hash && pathname !== '/auth/callback') {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
   }, [pathname]);
