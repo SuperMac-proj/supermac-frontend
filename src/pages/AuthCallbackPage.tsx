@@ -20,6 +20,9 @@ export default function AuthCallbackPage() {
 
         // Exchange the code for a session
         const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+        console.log('=== Exchange Result ===');
+        console.log('data:', data);
+        console.log('error:', error);
 
         if (error) {
           console.error('Auth error:', error);
