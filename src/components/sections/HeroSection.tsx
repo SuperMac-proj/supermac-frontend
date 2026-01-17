@@ -32,24 +32,28 @@ export default function HeroSection() {
       const visibleBottom = Math.min(windowHeight, rect.bottom);
       const visibleHeight = Math.max(0, visibleBottom - visibleTop);
 
-      // 비디오의 100%가 보이는지 확인 (99.9%로 약간의 여유 허용)
+      // 비디오의 100%가 보이는지 확인
       const visibilityRatio = visibleHeight / videoHeight;
 
-      if (visibilityRatio >= 0.999 && video.paused) {
+      // 비디오가 100% 보이고, 일시정지 상태이며, 비디오 상단이 화면 안에 있을 때만 재생
+      if (visibilityRatio >= 0.99 && video.paused && rect.top >= 0 && rect.bottom <= windowHeight) {
         video.play();
+      } else if (visibilityRatio < 0.99 && !video.paused) {
+        video.pause();
       }
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          // 비디오가 완전히 보일 때만(100%) 체크
+          if (entry.intersectionRatio >= 0.99) {
             checkVideoVisibility();
           }
         });
       },
       {
-        threshold: [0, 0.25, 0.5, 0.75, 1.0],
+        threshold: [0, 0.25, 0.5, 0.75, 0.99, 1.0],
       }
     );
 
@@ -65,9 +69,9 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen bg-black pb-20">
+    <section className="relative w-full min-h-screen bg-black pb-20 overflow-hidden">
       {/* Spline 3D Background */}
-      <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 bg-black">
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 bg-black">
         <iframe
           src="https://my.spline.design/metallictorus-ewLEUPjEnG0TwOjnaBcN6krV/"
           frameBorder="0"
@@ -79,7 +83,7 @@ export default function HeroSection() {
       </div>
 
       {/* Gradient Overlay */}
-      <div className="fixed inset-0 h-screen bg-gradient-to-b from-black/20 via-transparent via-40% to-black/80 pointer-events-none z-0" />
+      <div className="absolute inset-0 h-full bg-gradient-to-b from-black/20 via-transparent via-40% to-black/80 pointer-events-none z-0" />
 
       {/* Bottom Fade to Next Section */}
       <div className="absolute bottom-0 left-0 right-0 h-48 sm:h-56 md:h-64 lg:h-80 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-0" />
@@ -158,7 +162,7 @@ export default function HeroSection() {
           className="flex justify-center pointer-events-auto"
         >
           <a
-            href="https://github.com/your-repo/releases/latest/download/supermac.dmg"
+            href="https://gxfsguhfldneqnxpkcge.supabase.co/functions/v1/download"
             className="group relative px-5 py-2 sm:px-6 sm:py-2.5 text-base sm:text-lg font-bold
                        text-white rounded-lg sm:rounded-xl
                        bg-gradient-to-r from-blue-600 to-blue-700

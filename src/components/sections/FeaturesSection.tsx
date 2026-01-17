@@ -42,11 +42,10 @@ export default function FeaturesSection() {
             <Card
               className="
                 h-full text-center
-                bg-gray-900/60 backdrop-blur-sm
-                border border-gray-800
+                bg-gray-900 border border-gray-700
                 rounded-2xl p-8
                 transition-all duration-300
-                hover:bg-gray-900/80 hover:border-gray-700
+                hover:bg-gray-800 hover:border-gray-600
               "
             >
               {/* Icon */}
@@ -60,7 +59,7 @@ export default function FeaturesSection() {
               </h3>
 
               {/* Description */}
-              <p className="text-gray-100 leading-relaxed">
+              <p className="text-gray-300 leading-relaxed">
                 {feature.description}
               </p>
             </Card>

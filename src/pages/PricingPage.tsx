@@ -33,10 +33,27 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24 max-w-7xl mx-auto px-4">
-          {PRICING_PLANS.map((plan, index) => (
-            <PricingCard key={index} plan={plan} index={index} />
-          ))}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 md:gap-8 mb-16 md:mb-24 max-w-7xl mx-auto px-4">
+          {/* Subscription Plans (Monthly & Yearly) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full lg:w-auto">
+            {PRICING_PLANS.slice(0, 2).map((plan, index) => (
+              <div key={index} className="w-full md:w-[320px]">
+                <PricingCard plan={plan} index={index} />
+              </div>
+            ))}
+          </div>
+
+          {/* OR Divider */}
+          <div className="flex lg:flex-col items-center gap-4 py-4 lg:py-0 lg:px-4">
+            <div className="w-16 h-px lg:w-px lg:h-24 bg-gray-700"></div>
+            <span className="text-gray-500 font-medium text-sm uppercase tracking-wider">or</span>
+            <div className="w-16 h-px lg:w-px lg:h-24 bg-gray-700"></div>
+          </div>
+
+          {/* Lifetime Plan */}
+          <div className="w-full md:w-[320px]">
+            <PricingCard plan={PRICING_PLANS[2]} index={2} />
+          </div>
         </div>
 
         {/* FAQ Section */}
@@ -55,6 +72,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
         trial: PADDLE_PRICE_IDS.TRIAL,
         monthly: PADDLE_PRICE_IDS.MONTHLY,
         yearly: PADDLE_PRICE_IDS.YEARLY,
+        lifetime: PADDLE_PRICE_IDS.LIFETIME,
       };
 
       const priceId = priceIdMap[planType];
@@ -79,7 +97,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
 
   return (
     <motion.div
-      className={`relative bg-gray-900/50 backdrop-blur-sm rounded-3xl p-8 ${
+      className={`relative bg-gray-900/50 backdrop-blur-sm rounded-3xl p-8 h-full flex flex-col ${
         plan.highlighted
           ? 'border-2 border-blue-500 shadow-2xl scale-105 ring-2 ring-blue-500/20'
           : 'border border-gray-800 shadow-xl'
@@ -91,7 +109,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
       {/* Highlighted Badge */}
       {plan.highlighted && (
         <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2 rounded-2xl text-sm font-bold shadow-lg flex items-center gap-2 border-2 border-blue-500/50">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2 rounded-2xl text-sm font-bold shadow-lg flex items-center gap-2 border-2 border-blue-500/50 whitespace-nowrap">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
@@ -115,7 +133,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
       </div>
 
       {/* Features List */}
-      <ul className="space-y-3 mb-8">
+      <ul className="space-y-3 mb-8 flex-grow">
         {plan.features.map((feature, idx) => (
           <li key={idx} className="flex items-start">
             <svg
@@ -139,7 +157,7 @@ function PricingCard({ plan, index }: { plan: PricingPlan; index: number }) {
       {/* CTA Button */}
       <Button
         variant={plan.highlighted ? 'primary' : 'secondary'}
-        className="w-full"
+        className="w-full mt-auto"
         onClick={handleButtonClick}
       >
         {plan.buttonText}

@@ -2,22 +2,6 @@ import type { PricingPlan } from '../types';
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    name: 'Free Trial',
-    price: '7 Days',
-    description: 'Try all features free for 7 days',
-    features: [
-      'Full access to all features',
-      'Unlimited clipboard history',
-      'Text and image support',
-      'Unlimited text snippets',
-      'Advanced search with filters',
-      'Global keyboard shortcuts',
-    ],
-    highlighted: false,
-    buttonText: 'Start Free Trial',
-    buttonLink: 'paddle:trial', // Special link to trigger Paddle checkout
-  },
-  {
     name: 'Pro Monthly',
     price: '$7.99',
     period: 'month',
@@ -26,8 +10,6 @@ export const PRICING_PLANS: PricingPlan[] = [
       'Unlimited clipboard history',
       'Unlimited text snippets',
       'Advanced search with filters',
-      'Snippet folders and organization',
-      'Cloud sync across devices',
       'Priority support',
       'Regular updates',
     ],
@@ -37,28 +19,41 @@ export const PRICING_PLANS: PricingPlan[] = [
   },
   {
     name: 'Pro Yearly',
-    price: '$79.99',
-    period: 'year',
-    description: 'Save 17% with annual billing',
+    price: '$5',
+    period: 'month',
+    description: 'Billed annually at $60 (Save 37%)',
     features: [
-      'Everything in Monthly',
-      '2 months free (17% savings)',
+      'Save $35.88 per year',
+      'Unlimited clipboard history',
+      'Unlimited text snippets',
+      'Advanced search with filters',
       'Priority support',
-      'Early access to new features',
-      'Lifetime updates included',
-      'Cancel anytime',
+      'Regular updates',
     ],
     highlighted: false,
     buttonText: 'Get Yearly',
     buttonLink: 'paddle:yearly', // Special link to trigger Paddle checkout
   },
+  {
+    name: 'Lifetime',
+    price: '$110',
+    period: undefined,
+    description: 'One-time payment, lifetime access',
+    features: [
+      'Everything in Monthly',
+      'Pay once, use forever',
+      'All future updates included',
+      'Priority support forever',
+      'No recurring fees',
+      'Best value for long-term use',
+    ],
+    highlighted: false,
+    buttonText: 'Get Lifetime',
+    buttonLink: 'paddle:lifetime', // Special link to trigger Paddle checkout
+  },
 ];
 
 export const FAQ_ITEMS = [
-  {
-    question: 'What happens after the 7-day trial?',
-    answer: 'After the trial, you can choose between monthly ($7.99/month) or yearly ($79.99/year) subscription to continue using all features.',
-  },
   {
     question: 'Can I switch between monthly and yearly plans?',
     answer: 'Absolutely! You can switch at any time and all your data will be preserved.',

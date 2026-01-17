@@ -59,7 +59,7 @@ export default function HowItWorksSection() {
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
           How It Works
         </h2>
-        <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
           Get started with SuperMac in just three simple steps
         </p>
       </div>

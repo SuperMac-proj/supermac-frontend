@@ -123,5 +123,5 @@ export const FINAL_CTA = {
 // Links
 export const LINKS = {
   github: "https://github.com/yourusername/supermac",
-  download: "https://github.com/yourusername/supermac/releases",
+  download: "https://gxfsguhfldneqnxpkcge.supabase.co/functions/v1/download",
 };

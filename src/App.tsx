@@ -9,12 +9,20 @@ import BlogPostPage from "./pages/BlogPostPage";
 import ReleaseNotesPage from "./pages/ReleaseNotesPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import MyPage from "./pages/MyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import RefundPolicyPage from "./pages/RefundPolicyPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Clean up hash from URL (from Supabase OAuth)
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   }, [pathname]);
 
   return null;
@@ -36,6 +44,9 @@ function App() {
           <Route path="/release-notes" element={<ReleaseNotesPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/my-page" element={<MyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
         </Routes>
 
         {/* Footer */}
@@ -45,6 +56,13 @@ function App() {
               {/* Links */}
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
                 <a
+                  href="/terms-of-service"
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </a>
+                <span className="text-white/30">•</span>
+                <a
                   href="/privacy-policy"
                   className="text-white/70 hover:text-white transition-colors"
                 >
@@ -52,10 +70,10 @@ function App() {
                 </a>
                 <span className="text-white/30">•</span>
                 <a
-                  href="/terms-of-service"
+                  href="/refund-policy"
                   className="text-white/70 hover:text-white transition-colors"
                 >
-                  Terms of Service
+                  Refund Policy
                 </a>
                 <span className="text-white/30">•</span>
                 <a

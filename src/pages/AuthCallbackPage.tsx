@@ -6,16 +6,32 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Handle the OAuth callback
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        // Successfully signed in
-        console.log('User signed in:', session.user);
-        navigate('/');
-      } else if (event === 'SIGNED_OUT') {
-        navigate('/');
+    const handleAuthCallback = async () => {
+      try {
+        // Get the session from the URL hash
+        const { data, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('Auth error:', error);
+          navigate('/', { replace: true });
+          return;
+        }
+
+        if (data.session) {
+          console.log('User signed in:', data.session.user);
+          // Navigate and replace history to avoid keeping the callback URL
+          navigate('/', { replace: true });
+        } else {
+          // No session, redirect to home
+          navigate('/', { replace: true });
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        navigate('/', { replace: true });
       }
-    });
+    };
+
+    handleAuthCallback();
   }, [navigate]);
 
   return (

@@ -117,6 +117,7 @@ export async function updatePaymentMethod(subscriptionId: string): Promise<void>
 export const PADDLE_PRICE_IDS = {
   MONTHLY: import.meta.env.VITE_PADDLE_PRICE_ID_MONTHLY || '',
   YEARLY: import.meta.env.VITE_PADDLE_PRICE_ID_YEARLY || '',
+  LIFETIME: import.meta.env.VITE_PADDLE_PRICE_ID_LIFETIME || '',
   TRIAL: import.meta.env.VITE_PADDLE_PRICE_ID_TRIAL || '',
 } as const;
 

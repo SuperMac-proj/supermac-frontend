@@ -27,7 +27,7 @@ export default function FinalCTASection() {
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-center mb-8 sm:mb-10">
           <button
-            onClick={() => window.open(LINKS.download, "_blank")}
+            onClick={() => window.location.href = LINKS.download}
             className="group px-7 py-3.5 sm:px-8 sm:py-4 text-xl sm:text-2xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-2xl border-2 border-blue-500/50 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">

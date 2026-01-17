@@ -58,7 +58,7 @@ export default function UseCasesSection() {
               </h3>
 
               {/* Description */}
-              <p className="text-gray-100 text-sm leading-relaxed">
+              <p className="text-gray-400 text-sm leading-relaxed">
                 {useCase.description}
               </p>
             </Card>
