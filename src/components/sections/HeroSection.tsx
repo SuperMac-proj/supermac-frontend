@@ -24,36 +24,23 @@ export default function HeroSection() {
       const rect = video.getBoundingClientRect();
       const windowHeight = window.innerHeight || document.documentElement.clientHeight;
 
-      // 비디오의 높이
-      const videoHeight = rect.height;
+      // 비디오가 화면에 100% 보이는지 확인 (상단과 하단 모두 화면 안에 있어야 함)
+      const isFullyVisible = rect.top >= 0 && rect.bottom <= windowHeight;
 
-      // 화면에 보이는 비디오의 높이 계산
-      const visibleTop = Math.max(0, rect.top);
-      const visibleBottom = Math.min(windowHeight, rect.bottom);
-      const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-      // 비디오의 100%가 보이는지 확인
-      const visibilityRatio = visibleHeight / videoHeight;
-
-      // 비디오가 100% 보이고, 일시정지 상태이며, 비디오 상단이 화면 안에 있을 때만 재생
-      if (visibilityRatio >= 0.99 && video.paused && rect.top >= 0 && rect.bottom <= windowHeight) {
+      // 비디오가 100% 보이고 일시정지 상태일 때만 재생
+      if (isFullyVisible && video.paused) {
         video.play();
-      } else if (visibilityRatio < 0.99 && !video.paused) {
+      } else if (!isFullyVisible && !video.paused) {
         video.pause();
       }
     };
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // 비디오가 완전히 보일 때만(100%) 체크
-          if (entry.intersectionRatio >= 0.99) {
-            checkVideoVisibility();
-          }
-        });
+      () => {
+        checkVideoVisibility();
       },
       {
-        threshold: [0, 0.25, 0.5, 0.75, 0.99, 1.0],
+        threshold: [0, 1.0],
       }
     );
 
@@ -69,7 +56,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen bg-black pb-20 overflow-hidden">
+    <section className="relative w-full min-h-0 sm:min-h-screen bg-black pb-6 sm:pb-12 md:pb-20 overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 bg-black">
         <iframe
@@ -86,11 +73,11 @@ export default function HeroSection() {
       <div className="absolute inset-0 h-full bg-gradient-to-b from-black/20 via-transparent via-40% to-black/80 pointer-events-none z-0" />
 
       {/* Bottom Fade to Next Section */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 sm:h-56 md:h-64 lg:h-80 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-32 md:h-48 lg:h-80 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-0" />
 
       {/* Logo - Above Title */}
       <motion.div
-        className="absolute top-12 sm:top-16 md:top-20 lg:top-24 left-0 right-0 flex justify-center z-10 pointer-events-none"
+        className="absolute top-20 sm:top-16 md:top-18 lg:top-24 left-0 right-0 flex justify-center z-10 pointer-events-none"
         initial={{ opacity: 0, y: 30 }}
         animate={{
           opacity: 1,
@@ -112,15 +99,15 @@ export default function HeroSection() {
         <img
           src={logo}
           alt="SuperMac Logo"
-          className="w-[240px] h-[240px]"
+          className="w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] md:w-[220px] md:h-[220px] lg:w-[240px] lg:h-[240px]"
         />
       </motion.div>
 
       {/* Content Container */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-start px-4 pt-40 sm:pt-48 md:pt-56 lg:pt-72 pointer-events-none">
+      <div className="relative z-10 w-full flex flex-col items-center justify-start px-3 sm:px-4 pt-48 sm:pt-48 md:pt-56 lg:pt-72 pointer-events-none">
         {/* Main Heading */}
         <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-center text-white mb-6 sm:mb-8 tracking-tight w-full px-4 sm:px-6"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-bold text-center text-white mb-4 sm:mb-6 md:mb-8 tracking-tight w-full px-2 sm:px-4 md:px-6"
           style={{
             fontFamily:
               '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
@@ -137,7 +124,7 @@ export default function HeroSection() {
 
         {/* Subtitle */}
         <motion.p
-          className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 sm:px-6"
+          className="font-semibold text-base sm:text-xl md:text-2xl lg:text-4xl text-center text-white/90 mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-3 sm:px-4 md:px-6"
           style={{
             fontFamily:
               '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
@@ -154,16 +141,26 @@ export default function HeroSection() {
           Go home earlier.
         </motion.p>
 
+        {/* Mobile Download Notice */}
+        <motion.p
+          className="lg:hidden text-sm text-white/60 mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.1 }}
+        >
+          Please check download on PC.
+        </motion.p>
+
         {/* CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.1 }}
-          className="flex justify-center pointer-events-auto"
+          className="hidden lg:flex justify-center pointer-events-auto"
         >
           <a
             href="https://gxfsguhfldneqnxpkcge.supabase.co/functions/v1/download"
-            className="group relative px-5 py-2 sm:px-6 sm:py-2.5 text-base sm:text-lg font-bold
+            className="group relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-sm sm:text-base md:text-lg font-bold
                        text-white rounded-lg sm:rounded-xl
                        bg-gradient-to-r from-blue-600 to-blue-700
                        hover:from-blue-500 hover:to-blue-600
@@ -180,12 +177,12 @@ export default function HeroSection() {
 
         {/* Video Section */}
         <motion.div
-          className="w-[95%] sm:w-[90%] md:w-[85%] max-w-3xl mt-12 sm:mt-16 pointer-events-none"
+          className="w-[92%] sm:w-[88%] md:w-[85%] max-w-3xl mt-8 sm:mt-12 md:mt-16 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: videoLoaded ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 1.5 }}
         >
-          <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+          <div className="relative w-full rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
             <video
               ref={videoRef}
               src={clipboardVideo}

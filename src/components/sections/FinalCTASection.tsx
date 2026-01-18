@@ -6,7 +6,7 @@ export default function FinalCTASection() {
   return (
     <Section
       id="download"
-      className="bg-gradient-to-b from-black via-gray-950 to-black relative overflow-hidden"
+      className="hidden lg:block bg-gradient-to-b from-black via-gray-950 to-black relative overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-blue-600/20"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>

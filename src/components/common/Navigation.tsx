@@ -79,6 +79,7 @@ export default function Navigation() {
   }, [isUserMenuOpen]);
 
   return (
+    <>
     <nav
       className={`fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-b border-white/10 z-50 shadow-2xl transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
@@ -193,7 +194,7 @@ export default function Navigation() {
               )}
               <a
                 href="#"
-                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                className="hidden lg:block px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               >
                 Download
               </a>
@@ -296,13 +297,6 @@ export default function Navigation() {
                   Sign In
                 </button>
               )}
-              <a
-                href="#"
-                className="block w-full px-5 py-3 text-center text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md"
-                onClick={closeMobileMenu}
-              >
-                Download
-              </a>
             </div>
           </div>
         )}
@@ -314,5 +308,14 @@ export default function Navigation() {
         onClose={() => setIsLoginModalOpen(false)}
       />
     </nav>
+
+    {/* Mobile Menu Backdrop - Outside nav */}
+    {isMobileMenuOpen && (
+      <div
+        className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-md z-40"
+        onClick={closeMobileMenu}
+      />
+    )}
+    </>
   );
 }
