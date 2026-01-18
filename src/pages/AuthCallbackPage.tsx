@@ -26,10 +26,10 @@ export default function AuthCallbackPage() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50/50 to-white">
+    <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="text-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent mb-4"></div>
-        <p className="text-gray-600">Signing you in...</p>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent mb-4"></div>
+        <p className="text-white/70">Signing you in...</p>
       </div>
     </div>
   );
