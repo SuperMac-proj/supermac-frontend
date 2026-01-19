@@ -193,7 +193,7 @@ export default function Navigation() {
                 </button>
               )}
               <a
-                href="#"
+                href="https://gxfsguhfldneqnxpkcge.supabase.co/functions/v1/download"
                 className="hidden lg:block px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               >
                 Download
