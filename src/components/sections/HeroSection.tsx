@@ -1,16 +1,25 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { HERO_CONTENT } from "../../utils/constants";
+import { HERO_CONTENT, SOCIAL_PROOF, TRUST_BADGES } from "../../utils/constants";
 import clipboardVideo from "../../assets/clipboard_white.mp4";
-import logo from "../../assets/images/logo.png";
+import { Download, Star, Users, Clock, Shield, Zap } from "lucide-react";
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   const [splineLoaded, setSplineLoaded] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
+  // Scroll-based video scale animation
+  const { scrollYProgress } = useScroll({
+    target: videoContainerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Video scale: starts at 1.0, grows to 1.15 as the video section scrolls into view
+  const videoScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.15]);
+
   useEffect(() => {
-    // Spline이 완전히 렌더링되도록 추가 지연
     const splineTimer = setTimeout(() => {
       setSplineLoaded(true);
     }, 400);
@@ -23,11 +32,8 @@ export default function HeroSection() {
     const checkVideoVisibility = () => {
       const rect = video.getBoundingClientRect();
       const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      // 비디오가 화면에 100% 보이는지 확인 (상단과 하단 모두 화면 안에 있어야 함)
       const isFullyVisible = rect.top >= 0 && rect.bottom <= windowHeight;
 
-      // 비디오가 100% 보이고 일시정지 상태일 때만 재생
       if (isFullyVisible && video.paused) {
         video.play();
       } else if (!isFullyVisible && !video.paused) {
@@ -44,7 +50,6 @@ export default function HeroSection() {
       }
     );
 
-    // 스크롤 이벤트에도 체크
     window.addEventListener('scroll', checkVideoVisibility);
     observer.observe(video);
 
@@ -75,45 +80,35 @@ export default function HeroSection() {
       {/* Bottom Fade to Next Section */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-32 md:h-48 lg:h-80 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-0" />
 
-      {/* Logo - Above Title */}
-      <motion.div
-        className="absolute top-20 sm:top-16 md:top-18 lg:top-24 left-0 right-0 flex justify-center z-10 pointer-events-none"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          rotateY: [-15, 15, -15]
-        }}
-        transition={{
-          opacity: { duration: 0.8, delay: 0.1 },
-          y: { duration: 0.8, delay: 0.1 },
-          rotateY: {
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.9
-          }
-        }}
-        style={{ perspective: 1000 }}
-      >
-        <img
-          src={logo}
-          alt="SuperMac Logo"
-          className="w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] md:w-[220px] md:h-[220px] lg:w-[240px] lg:h-[240px]"
-        />
-      </motion.div>
-
       {/* Content Container */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-start px-3 sm:px-4 pt-48 sm:pt-48 md:pt-56 lg:pt-72 pointer-events-none">
-        {/* Main Heading */}
+      <div className="relative z-10 w-full flex flex-col items-center justify-start px-3 sm:px-4 pt-24 sm:pt-28 md:pt-32 lg:pt-40 pointer-events-none">
+        {/* Social Proof Badge - Above Headline */}
+        <motion.div
+          className="flex items-center gap-2 mb-4 sm:mb-5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="flex items-center gap-1">
+            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
+            <span className="text-xs sm:text-sm text-white/80 font-medium">{SOCIAL_PROOF.users}</span>
+          </div>
+          <div className="w-px h-3 bg-white/20" />
+          <div className="flex items-center gap-1">
+            <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400" />
+            <span className="text-xs sm:text-sm text-white/80 font-medium">{SOCIAL_PROOF.rating}</span>
+          </div>
+        </motion.div>
+
+        {/* Main Heading - Benefit-focused */}
         <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-bold text-center text-white mb-4 sm:mb-6 md:mb-8 tracking-tight w-full px-2 sm:px-4 md:px-6"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-center text-white mb-3 sm:mb-4 md:mb-5 tracking-tight w-full px-2 sm:px-4 md:px-6"
           style={{
             fontFamily:
               '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: "-0.03em",
-            lineHeight: "1.05",
+            lineHeight: "1.1",
           }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -122,67 +117,89 @@ export default function HeroSection() {
           {HERO_CONTENT.title}
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Subtitle - Clear value proposition */}
         <motion.p
-          className="font-semibold text-base sm:text-xl md:text-2xl lg:text-4xl text-center text-white/90 mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-3 sm:px-4 md:px-6"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-center text-white/70 mb-10 sm:mb-14 md:mb-16 max-w-2xl mx-auto px-3 sm:px-4 md:px-6"
           style={{
             fontFamily:
               '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             fontWeight: 400,
             letterSpacing: "-0.01em",
-            lineHeight: "1.3",
+            lineHeight: "1.5",
           }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
-          Boost productivity by up to 17%.
-          <br />
-          Go home earlier.
+          {HERO_CONTENT.subtitle}
         </motion.p>
 
-        {/* Mobile Download Notice */}
-        <motion.p
-          className="lg:hidden text-sm text-white/60 mb-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
-        >
-          Please check download on PC.
-        </motion.p>
-
-        {/* CTA Button */}
+        {/* CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.1 }}
-          className="hidden lg:flex justify-center pointer-events-auto"
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="flex flex-col items-center gap-3 sm:gap-4 pointer-events-auto"
         >
+          {/* Primary CTA Button - Enhanced */}
           <a
-            href="https://gxfsguhfldneqnxpkcge.supabase.co/functions/v1/download"
-            className="group relative px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-sm sm:text-base md:text-lg font-bold
-                       text-white rounded-lg sm:rounded-xl
-                       bg-gradient-to-r from-blue-600 to-blue-700
-                       hover:from-blue-500 hover:to-blue-600
+            href="/pricing"
+            className="group relative flex items-center gap-2 sm:gap-3 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold
+                       text-white rounded-xl sm:rounded-2xl
+                       bg-gradient-to-r from-blue-500 to-blue-600
+                       hover:from-blue-400 hover:to-blue-500
                        transform hover:scale-105 transition-all duration-300
-                       border-2 border-blue-400/60"
+                       shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
             style={{
               fontFamily:
                 '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
             }}
           >
-            <span>Download for macOS</span>
+            <Download className="w-5 h-5 sm:w-6 sm:h-6 group-hover:animate-bounce" />
+            <span>Get Started</span>
           </a>
+
+          {/* Trust Badges - Below CTA */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-1">
+            {TRUST_BADGES.map((badge, index) => (
+              <motion.div
+                key={index}
+                className="flex items-center gap-1.5 text-white/50 text-xs sm:text-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
+              >
+                {badge.icon === 'shield' && <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                {badge.icon === 'zap' && <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                {badge.icon === 'clock' && <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                <span>{badge.text}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile Notice */}
+          <motion.p
+            className="lg:hidden text-xs text-white/40 mt-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            Desktop download available on PC
+          </motion.p>
         </motion.div>
 
-        {/* Video Section */}
+        {/* Video Section - Scales up on scroll */}
         <motion.div
-          className="w-[92%] sm:w-[88%] md:w-[85%] max-w-3xl mt-8 sm:mt-12 md:mt-16 pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: videoLoaded ? 1 : 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
+          ref={videoContainerRef}
+          className="w-[92%] sm:w-[88%] md:w-[85%] max-w-3xl mt-20 sm:mt-28 md:mt-36 pointer-events-none"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: videoLoaded ? 1 : 0, y: videoLoaded ? 0 : 40 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
         >
-          <div className="relative w-full rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+          <motion.div
+            className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl shadow-blue-500/10 border border-white/10 bg-black/50 backdrop-blur-sm origin-center"
+            style={{ scale: videoScale }}
+          >
             <video
               ref={videoRef}
               src={clipboardVideo}
@@ -194,7 +211,7 @@ export default function HeroSection() {
               className="w-full h-auto transition-opacity duration-700"
               style={{ opacity: videoLoaded ? 1 : 0 }}
             />
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

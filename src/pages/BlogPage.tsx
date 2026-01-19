@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Section } from "../components/common";
 import { BLOG_POSTS } from "../utils/blogPosts";
+import { FileText } from "lucide-react";
 
 export default function BlogPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -75,113 +75,28 @@ export default function BlogPage() {
 
           {/* Main Content */}
           <div>
-            {/* Post count */}
-            <div className="mb-6 text-sm text-gray-400">
-              {selectedTag ? (
-                <span>
-                  Showing {filteredPosts.length} post
-                  {filteredPosts.length !== 1 ? "s" : ""} in{" "}
-                  <span className="font-semibold text-blue-400">
-                    {selectedTag}
-                  </span>
-                </span>
-              ) : (
-                <span>All posts ({filteredPosts.length})</span>
-              )}
-            </div>
-
-            {/* Blog Posts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredPosts.map((post, index) => (
-                <BlogPostCard key={post.slug} post={post} index={index} />
-              ))}
-            </div>
-
-            {/* No results */}
+            {/* Empty State */}
             {filteredPosts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-400">No posts found for this topic.</p>
-              </div>
+              <motion.div
+                className="text-center py-20"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600/20 border border-blue-500/30 mb-6">
+                  <FileText className="w-8 h-8 text-blue-400" />
+                </div>
+                <p className="text-lg text-gray-400">
+                  The post has not been created yet.
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  I'll be back with a better posts.
+                </p>
+              </motion.div>
             )}
           </div>
         </div>
       </Section>
     </div>
   );
-}
-
-interface BlogPostCardProps {
-  post: (typeof BLOG_POSTS)[0];
-  index: number;
-}
-
-function BlogPostCard({ post, index }: BlogPostCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-    >
-      <Link
-        to={`/blog/${post.slug}`}
-        className="block group h-full bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 shadow-md hover:shadow-xl hover:border-gray-700 transition-all duration-300 hover:-translate-y-1"
-      >
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-600/20 text-blue-400 border border-blue-500/30"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Title */}
-        <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-          {post.title}
-        </h2>
-
-        {/* Excerpt */}
-        <p className="text-gray-400 mb-4 line-clamp-3">{post.excerpt}</p>
-
-        {/* Meta */}
-        <div className="flex items-center gap-4 text-sm text-gray-500">
-          <span>{post.author}</span>
-          <span>•</span>
-          <time>{formatDate(post.date)}</time>
-          <span>•</span>
-          <span>{post.readTime}</span>
-        </div>
-
-        {/* Read More Arrow */}
-        <div className="mt-6 flex items-center text-blue-400 font-semibold group-hover:gap-2 transition-all">
-          <span>Read more</span>
-          <svg
-            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
